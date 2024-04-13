@@ -35,6 +35,7 @@ The `echo: false` option disables the printing of code (only output is displayed
 ```{r}
 data_w <- data[-26,] %>% 
   clean_names() %>% 
+  mutate(treatment = factor(treatment)) %>% 
   
   mutate(
     rep = case_when
@@ -45,6 +46,7 @@ data_w <- data[-26,] %>%
       plot == c(21:25) ~ "5"
      )
   ) %>% 
+  mutate(rep = factor(rep)) %>% 
   pivot_longer(cols =r1_01_29_24:r6_02_07_24,
                values_to = "respiration",
                names_to = "x1")   %>%
@@ -61,23 +63,47 @@ data_w <- data[-26,] %>%
  mutate(date1 = str_extract(x1, "\\d{2}_\\d{2}_\\d{2}")
   ) %>% 
   mutate(date = as.Date(date1, "%m_%d_%y")) %>% 
+  mutate(dar = case_when(
+    date == "2024-01-29" ~ "1",
+    date == "2024-01-30" ~ "2", 
+    date == "2024-01-31" ~ "3",
+    date == "2024-02-05" ~ "1", 
+    date == "2024-02-06" ~ "2",
+    date == "2024-02-07" ~ "3"
+  )) %>% 
+  mutate(drying_cycle = case_when(
+    date == "2024-01-29" ~ "1",
+    date == "2024-01-30" ~ "1", 
+    date == "2024-01-31" ~ "1",
+    date == "2024-02-05" ~ "2", 
+    date == "2024-02-06" ~ "2",
+    date == "2024-02-07" ~ "2")
+  ) %>% 
+  mutate(across(dar:drying_cycle, ~factor(.))) %>% 
   select(c(-x1,-x2,-x3,-date1)) 
 
-
+data_w
 ```
 
 
 ```{r EDA}
 data_w %>% 
-  ggplot(aes(treatment,respiration,
-             color = treatment))+
-  geom_boxplot()
+  ggplot(aes(dar,respiration))+
+  geom_boxplot()+
+  facet_wrap(~treatment + drying_cycle)
   
 ```
-
+One of the assumptioins of the ancova model is that the dependent variable must be linearly related to the covariates. 
 ```{r}
-
+data_w %>% 
+  ggscatter(x= "watercontent", y ="respiration",
+            color = "treatment", add = "reg.line")+
+  stat_regline_equation(
+    aes(label =  paste(..eq.label.., ..rr.label.., sep = "~~~~"), color = treatment)
+    )
 ```
+The linearity assumption seems to be not satisfied, and thus we move ahead with just the anova analysis. 
+
 ```{r}
 model_cov <- aov(soiltemp ~ treatment,
                  data = data_w)
