@@ -52,25 +52,15 @@ data_w <- data[-26,] %>%
   pivot_longer(cols =r1_01_29_24:r6_02_07_24,
                values_to = "respiration",
                names_to = "x1")   %>%
-  mutate(x1 = gsub("resp", "", x1)) %>% 
-   pivot_longer(cols = starts_with("sw"),
-               values_to = "watercontent", 
-               names_to = "x2"
-               ) %>% 
-  mutate(x2 = gsub("water", "", x2)) %>% 
-  pivot_longer(cols = st1:st6,
-               values_to = "soiltemp",
-               names_to = "x3") %>% 
-  mutate(x3 = gsub("temp", "", x3)) %>% 
  mutate(date1 = str_extract(x1, "\\d{2}_\\d{2}_\\d{2}")
   ) %>% 
   mutate(date = as.Date(date1, "%m_%d_%y")) %>% 
   mutate(dar = case_when(
-    date == "2024-01-29" ~ "1",
-    date == "2024-01-30" ~ "2", 
-    date == "2024-01-31" ~ "3",
-    date == "2024-02-05" ~ "8", 
-    date == "2024-02-06" ~ "9",
+    date == "2024-01-29" ~ "01",
+    date == "2024-01-30" ~ "02", 
+    date == "2024-01-31" ~ "03",
+    date == "2024-02-05" ~ "08", 
+    date == "2024-02-06" ~ "09",
     date == "2024-02-07" ~ "10"
   )) %>% 
   mutate(drying_cycle = case_when(
@@ -81,8 +71,10 @@ data_w <- data[-26,] %>%
     date == "2024-02-06" ~ "2",
     date == "2024-02-07" ~ "2")
   ) %>% 
-  mutate(across(dar:drying_cycle, ~factor(.))) %>% 
-  select(c(-x1,-x2,-x3,-date1)) 
+  mutate(fdar = factor(dar)) %>%
+  mutate(dar = as.numeric(dar)) %>% 
+  mutate(drying_cycle = factor(drying_cycle)) %>% 
+  select(c(-x1,-date1)) 
 
 data_w
 ```
@@ -90,9 +82,9 @@ data_w
 
 ```{r EDA}
 data_w %>% 
-  ggplot(aes(dar,respiration))+
+  ggplot(aes(fdar,respiration))+
   geom_boxplot()+
-  facet_wrap(~treatment)
+ facet_wrap(~treatment)
   
 ```
 One of the assumptioins of the ancova model is that the dependent variable must be linearly related to the covariates. 
@@ -109,7 +101,7 @@ The linearity assumption seems to be not satisfied, and thus we move ahead with 
 ```{r - default model}
 options(contrasts = c("contr.sum", "contr.poly"))
 
-mix_mod <- lme(respiration ~ treatment*dar,
+mix_mod <- lme(respiration ~ treatment,
                 random = ~1 | rep/dar,
                 data = data_w)
 mix_mod
