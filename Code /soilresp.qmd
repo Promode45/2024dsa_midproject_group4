@@ -76,7 +76,7 @@ data_w <- data[-26,] %>%
   mutate(drying_cycle = factor(drying_cycle)) %>% 
   select(c(-x1,-date1)) 
 
-data_w
+summary(data_w)
 ```
 
 
@@ -101,8 +101,8 @@ The linearity assumption seems to be not satisfied, and thus we move ahead with 
 ```{r - default model}
 options(contrasts = c("contr.sum", "contr.poly"))
 
-mix_mod <- lme(respiration ~ treatment,
-                random = ~1 | rep/dar,
+mix_mod <- lme(respiration ~ treatment*fdar,
+                random = ~ 1 |rep/fdar,
                 data = data_w)
 mix_mod
 ```
@@ -110,5 +110,24 @@ mix_mod
 ```{r}
 Anova(mix_mod,type = 3)
 ACF(mix_mod, resType = "n")
+```
+```{r - autroregressive moving average }
+mod2_ma <- lme(respiration ~ treatment*fdar,
+                random = ~1 |rep/fdar,
+               correlation = corARMA(p = 1, q = 1),
+                data = data_w)
+mod2_ma
+ACF(mod2_ma,resType = "n") %>% 
+  plot(alpha = 0.01)
+```
+
+```{r - comparison}
+anova(mix_mod,mod2_ma)
+```
+```{r - exponential}
+mod3_exp <- lme(respiration ~ treatment*fdar,
+                random = ~1 |rep/fdar,
+                correlation = corExp(form = ~dar),
+                data = data_w)
 ```
 
