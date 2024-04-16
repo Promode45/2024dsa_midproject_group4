@@ -145,3 +145,48 @@ mod3_exp <- lme(respiration ~ treatment*fdar,
                 data = data_w)
 mod3_exp
 ```
+```{r - comparison}
+anova(mix_mod,mod3_exp)
+```
+```{r - Gaussian}
+mod4_gaus <- lme(respiration ~ treatment*fdar,
+                random = ~1 |rep/plot,
+                correlation = corGaus(form = ~dar),
+                data = data_w)
+mod4_gaus
+```
+```{r - comparison}
+anova(mix_mod, mod4_gaus)
+```
+
+```{r Linear}
+mod5_lin <- lme(respiration ~ treatment*fdar,
+                random = ~1 |rep/plot,
+                correlation = corLin(form = ~dar),
+                data = data_w)
+
+mod5_lin
+```
+```{r - Rational Quadratic }
+mod6_rq <- lme(respiration ~ treatment*fdar,
+                random = ~1 |rep/plot,
+                correlation = corRatio(form = ~dar),
+                data = data_w)
+mod6_rq
+```
+```{r - Spherical}
+mod7_sph <- lme(respiration ~ treatment*fdar,
+                random = ~1 |rep/plot,
+                correlation = corSpher(form = ~dar),
+                data = data_w)
+mod7_sph
+```
+```{r - Final comparison}
+anova(mix_mod, mod2_ma, mod3_exp, mod4_gaus, mod5_lin, mod6_rq, mod7_sph) %>%
+  as.data.frame() %>%
+  rownames_to_column(var = "modelname") %>%
+  janitor::clean_names() %>%
+  dplyr::select(modelname, model, df, aic, bic) %>%
+  arrange(aic)
+```
+
