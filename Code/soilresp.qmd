@@ -145,6 +145,12 @@ mod3_exp <- lme(respiration ~ treatment*fdar,
                 data = data_w)
 mod3_exp
 ```
+```{r}
+ACF(mod3_exp, resType = "n") %>%
+  plot(alpha = 0.01)
+```
+
+
 ```{r - comparison}
 anova(mix_mod,mod3_exp)
 ```
@@ -155,6 +161,11 @@ mod4_gaus <- lme(respiration ~ treatment*fdar,
                 data = data_w)
 mod4_gaus
 ```
+```{r}
+ACF(mod4_gaus, resType = "n") %>%
+  plot(alpha = 0.01)
+```
+
 ```{r - comparison}
 anova(mix_mod, mod4_gaus)
 ```
@@ -167,6 +178,11 @@ mod5_lin <- lme(respiration ~ treatment*fdar,
 
 mod5_lin
 ```
+```{r}
+ACF(mod5_lin, resType = "n") %>%
+  plot(alpha = 0.01)
+```
+
 ```{r - Rational Quadratic }
 mod6_rq <- lme(respiration ~ treatment*fdar,
                 random = ~1 |rep/plot,
@@ -174,6 +190,11 @@ mod6_rq <- lme(respiration ~ treatment*fdar,
                 data = data_w)
 mod6_rq
 ```
+```{r}
+ACF(mod6_rq, resType = "n") %>%
+  plot(alpha = 0.01)
+```
+
 ```{r - Spherical}
 mod7_sph <- lme(respiration ~ treatment*fdar,
                 random = ~1 |rep/plot,
@@ -181,6 +202,11 @@ mod7_sph <- lme(respiration ~ treatment*fdar,
                 data = data_w)
 mod7_sph
 ```
+```{r}
+ACF(mod7_sph, resType = "n") %>%
+  plot(alpha = 0.01)
+```
+
 ```{r - Final comparison}
 anova(mix_mod, mod2_ma, mod3_exp, mod4_gaus, mod5_lin, mod6_rq, mod7_sph) %>%
   as.data.frame() %>%
