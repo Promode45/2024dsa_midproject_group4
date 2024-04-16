@@ -27,7 +27,7 @@ You can add options to executable code like this
 
 ```{r}
 #| echo: false
-data <- read.csv("../Data /soilresp_midterm.csv")
+data <- read.csv("../Data/soilresp_midterm.csv")
 data
 summary(data)
 ```
@@ -74,11 +74,20 @@ data_w <- data[-26,] %>%
   mutate(fdar = factor(dar)) %>%
   mutate(dar = as.numeric(dar)) %>% 
   mutate(drying_cycle = factor(drying_cycle)) %>% 
-  select(c(-x1,-date1)) 
+  select(c(-x1,-date1)) %>%
+  mutate(plot=factor(plot))
 
 summary(data_w)
 ```
-
+```{r}
+data_w %>%
+  group_by(treatment, dar) %>%
+  tally
+```
+```{r}
+data_w %>%
+  distinct(treatment, dar, rep, plot)
+```
 
 ```{r EDA}
 data_w %>% 
@@ -87,7 +96,9 @@ data_w %>%
  facet_wrap(~treatment)
   
 ```
-One of the assumptioins of the ancova model is that the dependent variable must be linearly related to the covariates. 
+
+One of the assumptioins of the ancova model is that the dependent variable must be linearly related to the covariates.
+
 ```{r}
 data_w %>% 
   ggscatter(x= "watercontent", y ="respiration",
@@ -96,13 +107,14 @@ data_w %>%
     aes(label =  paste(..eq.label.., ..rr.label.., sep = "~~~~"), color = treatment)
     )
 ```
-The linearity assumption seems to be not satisfied, and thus we move ahead with just the anova analysis. 
+
+The linearity assumption seems to be not satisfied, and thus we move ahead with just the anova analysis.
 
 ```{r - default model}
 options(contrasts = c("contr.sum", "contr.poly"))
 
 mix_mod <- lme(respiration ~ treatment*fdar,
-                random = ~ 1 |rep/fdar,
+                random = ~ 1 |rep/plot,
                 data = data_w)
 mix_mod
 ```
@@ -111,9 +123,10 @@ mix_mod
 Anova(mix_mod,type = 3)
 ACF(mix_mod, resType = "n")
 ```
+
 ```{r - autroregressive moving average }
 mod2_ma <- lme(respiration ~ treatment*fdar,
-                random = ~1 |rep/fdar,
+                random = ~1 |rep/plot,
                correlation = corARMA(p = 1, q = 1),
                 data = data_w)
 mod2_ma
@@ -124,10 +137,11 @@ ACF(mod2_ma,resType = "n") %>%
 ```{r - comparison}
 anova(mix_mod,mod2_ma)
 ```
+
 ```{r - exponential}
 mod3_exp <- lme(respiration ~ treatment*fdar,
-                random = ~1 |rep/fdar,
+                random = ~1 |rep/plot,
                 correlation = corExp(form = ~dar),
                 data = data_w)
+mod3_exp
 ```
-
