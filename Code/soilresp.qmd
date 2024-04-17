@@ -52,6 +52,7 @@ data_w <- data[-26,] %>%
   pivot_longer(cols =r1_01_29_24:r6_02_07_24,
                values_to = "respiration",
                names_to = "x1")   %>%
+   mutate(x1 = gsub("resp", "", x1)) %>% 
  mutate(date1 = str_extract(x1, "\\d{2}_\\d{2}_\\d{2}")
   ) %>% 
   mutate(date = as.Date(date1, "%m_%d_%y")) %>% 
@@ -81,12 +82,12 @@ summary(data_w)
 ```
 ```{r}
 data_w %>%
-  group_by(treatment, dar) %>%
+  group_by(treatment, fdar) %>%
   tally
 ```
 ```{r}
 data_w %>%
-  distinct(treatment, dar, rep, plot)
+  distinct(treatment, fdar, rep, plot)
 ```
 
 ```{r EDA}
@@ -101,6 +102,15 @@ One of the assumptioins of the ancova model is that the dependent variable must 
 
 ```{r}
 data_w %>% 
+   pivot_longer(cols = starts_with("sw"),
+               values_to = "watercontent", 
+               names_to = "x2"
+               ) %>% 
+  mutate(x2 = gsub("water", "", x2)) %>% 
+  pivot_longer(cols = st1:st6,
+               values_to = "soiltemp",
+               names_to = "x3") %>% 
+  mutate(x3 = gsub("temp", "", x3)) %>% 
   ggscatter(x= "watercontent", y ="respiration",
             color = "treatment", add = "reg.line")+
   stat_regline_equation(
@@ -121,7 +131,8 @@ mix_mod
 
 ```{r}
 Anova(mix_mod,type = 3)
-ACF(mix_mod, resType = "n")
+ACF(mix_mod, resType = "n") %>% 
+  plot(alpha = 0.01)
 ```
 
 ```{r - autroregressive moving average }
@@ -214,5 +225,83 @@ anova(mix_mod, mod2_ma, mod3_exp, mod4_gaus, mod5_lin, mod6_rq, mod7_sph) %>%
   janitor::clean_names() %>%
   dplyr::select(modelname, model, df, aic, bic) %>%
   arrange(aic)
+```
+Best model - mod2 ma
+# checking residuals 
+```{r}
+library(broom.mixed)
+mod2_ma_resid <- augment(mod2_ma) %>% 
+  mutate(.stdresid = resid(mod2_ma,
+                           type = "pearson",
+                           scaled = T
+                           ))
+mod2_ma_resid 
+
+
+
+```
+```{r - block random effects}
+ranef(mod2_ma)[[1]] %>% 
+   ggplot(aes(sample=`(Intercept)`))+
+  stat_qq(  shape = 21,
+            fill = "purple", 
+            size = 3,
+            alpha = .7
+  )+
+  stat_qq_line()+
+  labs(x = "Theoretical quantile",
+       y = "Sample quantile")+
+  theme_bw()
+
+```
+
+# blocks:plots random effects 
+```{r}
+ranef(mod2_ma)[[2]] %>% 
+   ggplot(aes(sample=`(Intercept)`))+
+  stat_qq(  shape = 21,
+            fill = "purple", 
+            size = 3,
+            alpha = .7
+  )+
+  stat_qq_line()+
+  labs(x = "Theoretical quantile",
+       y = "Sample quantile")+
+  theme_bw()
+```
+
+# within groups errors 
+```{r}
+ggplot(mod2_ma_resid, aes(x=.fitted, y=.stdresid))+
+  geom_hline(yintercept = 0, color="red")+
+  geom_point(shape = 21,
+             fill = "purple", 
+             size = 3,
+             alpha = .7)+
+  geom_smooth()+
+  geom_hline(yintercept = c(-3,3), color = "red")+
+  theme_bw()
+```
+normality assumptions 
+```{r}
+ggplot(mod2_ma_resid, aes(sample=.stdresid))+
+  stat_qq(  shape = 21,
+            fill = "purple", 
+            size = 3,
+            alpha = .7
+  )+
+  stat_qq_line()+
+  labs(x = "Theoretical quantile",
+       y = "Sample quantile")+
+  theme_bw()
+```
+removal of outliers 
+```{r}
+ mod2_ma_resid %>% 
+  filter(.stdresid >= 3 | .stdresid <= -3) 
+```
+
+```{r}
+Anova(mod2_ma, type = 3)
 ```
 
