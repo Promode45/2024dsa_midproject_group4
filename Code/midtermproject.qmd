@@ -34,12 +34,18 @@ To get you setup, you will need to:
 
 Gross Primary Production(GPP) and soil respiration make the highest carbon fluxes from the terrestrial ecosystem to the atmosphere (Bond-Lamberty and Thomson, 2010). Due to the magnitude of the CO2 flux from soils to atmosphere and the huge reserve of potential C in soils, any increases in soil respiration due to man-made or environmental changes may increase atmospheric CO2 levels and exarcerbate global warming. Soil respiration consists mainly of respiration from roots, mycorrhizal fungi and microbes. Microbial respiration of soil C is the highest of the three (Wang and Fang, 2009). 
 
-Human activites have been significantly modifying biogeochemical cycles in many ways. Management practices like tillage and fetilization are one of the key factors contributing to increasing CO2 efflux from soils. Nitrogen is the most important component for plant growth, is often limiting in ecosystems, and could affect soil respiration by altering microbial biomass, their activity and root growth (Ding et al.,2010). Studies have found a sharp increase in CO2 efflux following tillage, mainly due to broken soil clods and aggregates which act as "gas tankers" (Fielder et al., 2015; Morell et al., 2010). Although, sharp increases of CO2 efflux are seen following tillage, the extent of the increase depends on cultivation type, Soil Organic Carbon (SOC), soil texture and structure. 
+Human activites have been significantly modifying biogeochemical cycles in many ways. Management practices like tillage and fertilization are one of the key factors contributing to increasing CO2 efflux from soils. Nitrogen is the most important component for plant growth, is often limiting in ecosystems, and could affect soil respiration by altering microbial biomass, their activity and root growth (Ding et al.,2010). Studies have found a sharp increase in CO2 efflux following tillage, mainly due to broken soil clods and aggregates which act as "gas tankers" (Fielder et al., 2015; Morell et al., 2010). Although, sharp increases of CO2 efflux are seen following tillage, the extent of the increase depends on cultivation type, Soil Organic Carbon (SOC), soil texture and structure. 
 
 Soil temperature and soil water content are considered the main environmental controls of soil respiration, as these can affect both microbial and root growth. The indirect effects of these factors, nutrient availability and plant productivity can also affect CO2 efflux from soils. Rainfall events can result in changes in both soil temperature and water content, and has been part of numerous studies (Shi et al., 2011; Muhr et al., 2010; Morell et al., 2010). But there are very few studies, where the combined effects of management practices, soil temperature and soil moisture have been studied. 
+
+In this experiment, we try to see the effects of common land management practices on soil respiration across different days following precipitation. 
 # Hypothesis and objectives
 
 Describe here your hypothesis, followed by your objectives. Make sure your hypothesis are testable and bold, and objectives are clear.
+
+We hypothesize that, soil respiration increases with fertilization and tillage and plots under these treatments will have a higher respiration following precipation as compared to the control plots. 
+
+The objectives of this study are (a) to assess the effects of treatments fertilization, tillage or their combined effects on soil CO2 flux over six different days, (b) to assess the effects of precipitation on soil CO2 flux and (c) interaction effects of treatments and days after rain. 
 
 # Material and Methods
 
