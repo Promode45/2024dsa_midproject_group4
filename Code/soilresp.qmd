@@ -344,11 +344,12 @@ ggplot(mod2_ma_resid, aes(sample=.stdresid))+
   theme_bw()
 ```
 
-Here, we will run type III ANOVA table for the fixed effects in mod2_ma and observe the significant factor.
-
+Here, we will run type III ANOVA table for the fixed effects in mod2_ma.
 ```{r}
 Anova(mod2_ma, type = 3)
 ```
+We see a significant interaction effects, and hence we go ahead with the comparison of means of all treatments crossed with the days after rain. 
+
 
 Here, we compare means between different treatments within each day of measurement. 
 
@@ -396,7 +397,7 @@ ggplot(mapping = aes(fill = treatment))+
                                    hjust = 1))
   
 ```
-Overall, on all days soil efflux values from NPK = disturbance plots were higher than the other treatment plots, especially on day 1 and day 10 after rain, where we see a statistically significant difference between the combined treatment and the other treatments. It is also interesting to note the variability in efflux values in NPK plots. 
+Overall, on all days soil efflux values from NPK + disturbance plots were higher than the other treatment plots, especially on day 1 and day 10 after rain, where we see a statistically significant difference between the combined treatment and the other treatments. It is also interesting to note the variability in efflux values in NPK plots. 
 
 In the chunk below, we compare different days after rain within each treatment plots. 
 
@@ -410,8 +411,6 @@ rm_rcbd_cld_dartf <- emmeans(mod2_ma, ~ fdar|treatment) %>%
 rm_rcbd_cld_dartf
 
 ```
-
-
 
 In this chunk, we see how soil respiration varies across different levels of the drying cycle("fdar") highlighting significant difference between levels within treatment groups will be visualized using boxplot.
 

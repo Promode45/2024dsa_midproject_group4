@@ -34,11 +34,7 @@ To get you setup, you will need to:
 
 Gross Primary Production(GPP) and soil respiration make the highest carbon fluxes from the terrestrial ecosystem to the atmosphere (Bond-Lamberty and Thomson, 2010). Due to the magnitude of the CO2 flux from soils to atmosphere and the huge reserve of potential C in soils, any increases in soil respiration due to man-made or environmental changes may increase atmospheric CO2 levels and exacerbate global warming. Soil respiration consists mainly of respiration from roots, mycorrhizal fungi and microbes. Microbial respiration of soil C is the highest of the three (Wang and Fang, 2009). 
 
-<<<<<<< HEAD
-Human activites have been significantly modifying biogeochemical cycles in many ways. Management practices like tillage and fertilization are one of the key factors contributing to increasing CO2 efflux from soils. Nitrogen is the most important component for plant growth, is often limiting in ecosystems, and could affect soil respiration by altering microbial biomass, their activity and root growth (Ding et al.,2010). Studies have found a sharp increase in CO2 efflux following tillage, mainly due to broken soil clods and aggregates which act as "gas tankers" (Fielder et al., 2015; Morell et al., 2010). Although, sharp increases of CO2 efflux are seen following tillage, the extent of the increase depends on cultivation type, Soil Organic Carbon (SOC), soil texture and structure. 
-=======
 Human activities have been significantly modifying biogeochemical cycles in many ways. Management practices like tillage and fertilization are one of the key factors contributing to increasing CO2 efflux from soils. Nitrogen is the most important component for plant growth, is often limiting in ecosystems, and could affect soil respiration by altering microbial biomass, their activity and root growth (Ding et al.,2010). Studies have found a sharp increase in CO2 efflux following tillage, mainly due to broken soil clods and aggregates which act as "gas tankers" (Fielder et al., 2015; Morell et al., 2010). Although, sharp increases of CO2 efflux are seen following tillage, the extent of the increase depends on cultivation type, Soil Organic Carbon (SOC), soil texture and structure. 
->>>>>>> 69d8d33bb968b67fca22eb102f87eb2c867b884b
 
 Soil temperature and soil water content are considered the main environmental controls of soil respiration, as these can affect both microbial and root growth. The indirect effects of these factors, nutrient availability and plant productivity can also affect CO2 efflux from soils. Rainfall events can result in changes in both soil temperature and water content, and has been part of numerous studies (Shi et al., 2011; Muhr et al., 2010; Morell et al., 2010). But there are very few studies, where the combined effects of management practices, soil temperature and soil moisture have been studied. 
 
@@ -47,9 +43,9 @@ In this experiment, we try to see the effects of common land management practice
 
 Describe here your hypothesis, followed by your objectives. Make sure your hypothesis are testable and bold, and objectives are clear.
 
-We hypothesize that, soil respiration increases with fertilization and tillage and plots under these treatments will have a higher respiration following precipation as compared to the control plots. 
+We hypothesize that, soil respiration increases with fertilization and tillage. Additionally, we believe that plots under these treatments will have a higher respiration following precipation as compared to the control plots. 
 
-The objectives of this study are (a) to assess the effects of treatments fertilization, tillage or their combined effects on soil CO2 flux over six different days, (b) to assess the effects of precipitation on soil CO2 flux and (c) interaction effects of treatments and days after rain. 
+The objectives of this study are (a) to assess the effects of treatments fertilization, tillage or their combined effects on soil CO2 flux over six different days, (b) to assess the effects of precipitation on soil CO2 flux. 
 
 # Material and Methods
 
@@ -61,12 +57,14 @@ The study was conducted at the Whitehall forest in the Piedmont regions Clarke a
 
 ## In-situ field measurements
 The gas samples were taken in late January and early February following two precipitation events from 25 treatment plots. Each plot is fitted with Polyvinyl chloride collars at a depth of about 5cm which are used to collect gas samples. We used a Licor LI-870 gas analyzer (LI-COR Inc., Lincoln, NE, USA) to measure the CO2 flux. The device is also equipped with a probe that simultaneously measures soil moisture, soil temperature and Electrical Conductivity. The measurements were taken on six different days to see the effects of rain on soil respiration. 
+The study area experienced rainfall on 28th of January 2024, and we started our soil respiration measurements from the 29th of January 2024 on days 1, 2, 3, 8,9 and 10. The repeated measure in this experiment "days after rain" are these measurements that were taken between the 29th of January 2024 and 10th of February 2024. It is worth mentioning that, there was a slight precipitation on day 7, but we did not consider this rain event as significantly affecting the experiment. 
 
 ## Study design
 
 Clearly describe your study design here, including treatment design (which factors and levels, the hierarchy among them, etc.), and your experimental design (number of reps/blocks, how was randomization performed, etc.), as we talked about in class.  
 
 The study consists of a set of five completely randomized blocks (within-site spatial replicates), each with five, 5x5m plots receiving either long-term nutrient addition, a physical disturbance, nutrient addition combined with disturbance, short-term nutrient addition or no treatments. The treatments were done just once at the beginning of summer every year (mid June). The randomization of the study site was carried out using a R code given on the project website (https://nutnet.org/sites/default/files/2019-07/create-site-maps-dragnet-03-July-2019.R).
+
 
 ## Statistical analysis
 
@@ -77,7 +75,7 @@ Soil respiration for different treatments were analyzed using a repeated measure
 2. Homogeneity of slopes - The relationship between the dependent and independent variable should be consistent across all the treatment levels. Slopes of regression lines (representing the effect of covariates) should be parallel for each group.  
 3. Uncorrelated covariates - The covariates must not be correlated to the error term.  
   
-We ran the ANCOVA model, and checked for one of the assumptions, which were not satisfied. Hence, we went ahead with the mixed-effects ANOVA
+We ran the ANCOVA model, and checked for one of the assumptions, which were not satisfied. Hence, we went ahead with the mixed-effects ANOVA. We used an alpha level of 0.05. We used the linear mixed effect mdoel (lme) from the package nlme (Pinheiro and Bates, 2000). The linearity assumptions were checked using the QQ-plot, and a point graph to check for normality, outliers and homoscedascity. **The assumption of outliers was not met, since we found two residuals that were off the limit of 3 standard deviations. But, the raw data points were checked and it did not seem out of place, and hence we decided to not remove them from our analysis.** Apart from this, all assumptions were satisfied without any problems. 
 
 # Results
 
