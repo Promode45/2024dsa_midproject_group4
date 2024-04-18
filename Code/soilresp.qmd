@@ -281,6 +281,9 @@ ggplot(mod2_ma_resid, aes(x=.fitted, y=.stdresid))+
   geom_smooth()+
   geom_hline(yintercept = c(-3,3), color = "red")+
   theme_bw()
+
+mod2_ma_resid %>% 
+  
 ```
 normality assumptions 
 ```{r}
@@ -295,29 +298,22 @@ ggplot(mod2_ma_resid, aes(sample=.stdresid))+
        y = "Sample quantile")+
   theme_bw()
 ```
-removal of outliers 
-```{r}
- outliers <- mod2_ma_resid %>% 
-  filter(.stdresid >= 3 | .stdresid <= -3) 
-```
 
-```{r}
-cleaned_data <- mod2_ma_resid %>%
-  anti_join(outliers, by = NULL)
 
-ggplot(cleaned_data, aes(sample=.stdresid))+
-  stat_qq(  shape = 21,
-            fill = "purple", 
-            size = 3,
-            alpha = .7
-  )+
-  stat_qq_line()+
-  labs(x = "Theoretical quantile",
-       y = "Sample quantile")+
-  theme_bw()
-```
 
 ```{r}
 Anova(mod2_ma, type = 3)
+```
+
+```{r tretament x fdar Interaction}
+library(emmeans)
+rm_rcbd_cld_tfdar <- emmeans(mod2_ma, ~ fdar|treatment) %>%
+  cld(.,
+      Letters = letters,
+      adjust = "none") %>%
+  as.data.frame() #%>%
+  mutate(letter = trimws(.group))
+  
+  rm_rcbd_cld_tfdar
 ```
 
