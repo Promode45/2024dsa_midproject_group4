@@ -307,13 +307,47 @@ Anova(mod2_ma, type = 3)
 
 ```{r tretament x fdar Interaction}
 library(emmeans)
-rm_rcbd_cld_tfdar <- emmeans(mod2_ma, ~ fdar|treatment) %>%
-  cld(.,
+library(multcomp)
+
+rm_rcbd_cld_tfdar <- emmeans(mod2_ma, ~ treatment|fdar) %>%
+  cld(reversed = T,
       Letters = letters,
       adjust = "none") %>%
-  as.data.frame() #%>%
+  as.data.frame() %>%
   mutate(letter = trimws(.group))
   
   rm_rcbd_cld_tfdar
+```
+
+```{r}
+ggplot(mapping = aes(fill = treatment))+
+  geom_boxplot(data = data_w,
+               aes(x =treatment, 
+                   y = respiration),
+               alpha = 0.8) +
+  geom_jitter(data = data_w,
+              aes(x= treatment,
+                  y = respiration),
+              shape = 21,
+              size = 1,
+              alpha = 0.6) +
+  geom_label(data = rm_rcbd_cld_tfdar,
+             aes(x= treatment,
+                 y = emmean,
+                 label = letter),
+             fill = "white",
+             size = 2,
+             alpha = 0.9) +
+ labs(x = "Land Management",
+       y = bquote("Soil respiration ("*mu* "mol" * "m" ^-2 * "s"^-1 *")"))+
+  scale_fill_viridis_d() +
+  facet_grid(.~fdar) +
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        legend.position = "none",
+        axis.text.x = element_text(angle = 90,
+                                   vjust = 0.5,
+                                   hjust = 1))
+  
 ```
 
