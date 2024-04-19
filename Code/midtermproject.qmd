@@ -89,9 +89,10 @@ If a chunk produces output, like printing a data frame, statistical summary, a p
 
 ## Running Code
 
+# Loading Packages
 In this chunk, I will load all the packages that will be used in the process of the analysis.
 
-```{r - Package}
+```{r }
 #|message: False
 #|warning: False
 library(tidyverse)
@@ -106,18 +107,19 @@ library(emmeans)
 library(multcomp)
 ```
 
-Here, I will load data
+# importing data
+We will import data in the following chunk
 
-```{r - data }
+```{r }
 #| echo: false
 data <- read.csv("../Data/soilresp_midterm.csv")
-data
 summary(data)
 ```
 
-In this chunk, I will manipulate and prepare the data for further analysis, including cleaning column header name, converting variables to appropriate data types and reshaping the data into a more suitable format for analyis.
+# Data wrangling
+In this chunk, we will manipulate and prepare the data for further analysis, including cleaning column header name, creating a column for rep(block), converting variables to appropriate data types and reshaping the data into a more suitable format for analysis.
 
-```{r - data wrangling}
+```{r }
 data_w <- data[-26,] %>% 
   clean_names() %>% 
   mutate(treatment = factor(treatment)) %>% 
@@ -147,49 +149,48 @@ data_w <- data[-26,] %>%
     date == "2024-02-06" ~ "09",
     date == "2024-02-07" ~ "10"
   )) %>% 
-  mutate(drying_cycle = case_when(
-    date == "2024-01-29" ~ "1",
-    date == "2024-01-30" ~ "1", 
-    date == "2024-01-31" ~ "1",
-    date == "2024-02-05" ~ "2", 
-    date == "2024-02-06" ~ "2",
-    date == "2024-02-07" ~ "2")
-  ) %>% 
   mutate(fdar = factor(dar)) %>%
   mutate(dar = as.numeric(dar)) %>% 
-  mutate(drying_cycle = factor(drying_cycle)) %>% 
   dplyr::select(c(-x1,-date1)) %>%
   mutate(plot=factor(plot))
 
+
 summary(data_w)
 ```
+In the data, swc stands for Soil Water Content, st stands for Soil temperature, 1-6 being the different days of measurement, dar being Days After Rain, date is the date of measurement. 
 
-In think chunk, I will group dataframe by the varibales (treatment and days after rain).
-
-```{r}
-data_w %>%
-  group_by(treatment, fdar) %>%
-  tally
-```
+# EDA
 
 ```{r}
-data_w %>%
-  distinct(treatment, fdar, rep, plot)
+data_w %>% 
+  group_by(fdar) %>% 
+  ggplot(aes(treatment,respiration))+
+  geom_boxplot()
 ```
+From the above graph, we can make an initial analysis saying that the plots with NPK treatments have in general a higher respiration value, especially the combined effects of NPK and disturbance,
 
-Here, I will inspect the distribution of respiration across different level of days after rain (dar), segmented by treatment, which can provide insights into potential relationships and patterns in the data.
+```{r}
+data_w %>% 
+  group_by(treatment) %>% 
+  ggplot(aes(fdar, respiration))+
+  geom_boxplot()
+```
+Although not too different, we could still say that respiration values the day right after a rain were higher than the other days. This is also part of our hypothesis. 
 
-```{r EDA}
+
+Here, we will inspect the distribution of respiration across different level of days after rain (dar), segmented by treatment, which can provide insights into potential relationships and patterns in the data.
+
+```{r}
 data_w %>% 
   ggplot(aes(fdar,respiration))+
   geom_boxplot()+
  facet_wrap(~treatment)
   
 ```
+# Ancova
+One of the assumptions of the ancova model is that the dependent variable must be linearly related to the covariates (Leppink, 2010)
 
-One of the assumptioins of the ancova model is that the dependent variable must be linearly related to the covariates.
-
-Here, I will reshape data and visualize the data to observe the linearity of the covariates.
+In the chunk below, we will reshape data and visualize the data to check the linearity of the covariates.
 
 ```{r}
 data_w %>% 
@@ -209,11 +210,12 @@ data_w %>%
     )
 ```
 
-he linearity assumption seems to be not satisfied, and thus we move ahead with just the anova analysis.
+The linearity assumption seems to be not satisfied, and thus we move ahead with just the anova analysis.
 
-Here, I will setup the environment for model fitting and fit the default linear mixed-effects model.
+#  default model
+Here, we will setup the environment for model fitting and fit the default linear mixed-effects model.
 
-```{r - default model}
+```{r}
 options(contrasts = c("contr.sum", "contr.poly"))
 
 mix_mod <- lme(respiration ~ treatment*fdar,
@@ -222,33 +224,46 @@ mix_mod <- lme(respiration ~ treatment*fdar,
 mix_mod
 ```
 
-In this chunk, I will further insights into the fitted linear mixed-effects model, including assessing the significance of fixed effects through ANOVA and examining the autocorrelation structure of the residuals.
+In the following two chunks, we will gain further insights into the fitted linear mixed-effects model, including assessing the significance of fixed effects through ANOVA and examining the autocorrelation structure of the residuals.
 
 ```{r}
-Anova(mix_mod,type = 3)
+Anova(mix_mod,type = 3) 
+
+```
+
+```{r}
 ACF(mix_mod, resType = "n") %>% 
   plot(alpha = 0.01)
 ```
+Although the default model will not be considered for model comparison, it is an easy way to start, and get a handle of things. There are six lags in the ACF plot above, which agrees with the number of repeated measures. But, it does seem that lag 1 is beyond our threshold requirement. 
 
+#  autroregressive moving average(ARMA)
 In this chunk I will fit linear mixed-effects model with an autoregreessive moving average (ARMA) correlation structure to the data and assesses the autocorrelation structure of the residuals.
 
-```{r - autroregressive moving average }
+```{r}
 mod2_ma <- lme(respiration ~ treatment*fdar,
                 random = ~1 |rep/plot,
                correlation = corARMA(p = 1, q = 1),
                 data = data_w)
 mod2_ma
+
+```
+The output of the model fitted with ARMA correlation structure looks okay 
+```{r}
 ACF(mod2_ma,resType = "n") %>% 
   plot(alpha = 0.01)
 ```
-
-```{r - comparison}
+The ACF plot looks good, all the lags are within the threshold. Now, we compare this model with the default one
+```{r}
 anova(mix_mod,mod2_ma)
 ```
+The AIC value for model 2 is lower than the default, which is a positive thing. But, BIC values do not represent the same. But, we will move on, and try to apply different correlation structures to see their effectiveness. 
 
+
+#  exponential correlation structure
 In this chunk, I will fit the linear mixed model to the data, incorporating an exponential correlation structure to account for the correlation between observations based on the different level of days after rain.
 
-```{r - exponential}
+```{r}
 mod3_exp <- lme(respiration ~ treatment*fdar,
                 random = ~1 |rep/plot,
                 correlation = corExp(form = ~dar),
@@ -260,14 +275,16 @@ mod3_exp
 ACF(mod3_exp, resType = "n") %>%
   plot(alpha = 0.01)
 ```
-
-```{r - comparison}
-anova(mix_mod,mod3_exp)
+One of the lags are beyonf the threshold, which we might be able to see in the comparison values as well, with a higher AIC value 
+```{r}
+anova(mix_mod,mod2_ma,mod3_exp)
 ```
+As expected from the ACF curve, we do see that the exponential correlation structure did not perform well (higher AIC)
 
-Here, I will fit the linear mixed model to the data, incorporating an Gaussian correlation structure and assessses the autocorrelation structure of the residuals.
+# Gaussian 
+Here, we will fit the linear mixed model to the data, incorporating a Gaussian correlation structure and assess the autocorrelation structure of the residuals.
 
-```{r - Gaussian}
+```{r }
 mod4_gaus <- lme(respiration ~ treatment*fdar,
                 random = ~1 |rep/plot,
                 correlation = corGaus(form = ~dar),
@@ -280,13 +297,15 @@ ACF(mod4_gaus, resType = "n") %>%
   plot(alpha = 0.01)
 ```
 
-```{r - comparison}
-anova(mix_mod, mod4_gaus)
+```{r}
+anova(mix_mod,mod2_ma,mod3_exp, mod4_gaus)
 ```
+Still model 2 with ARMA is the best performing. 
 
-Here, I will fit the linear mixed model to the data, incorporating an Linear correlation structure and assessses the autocorrelation structure of the residuals.
+# Linear
+Here, we will fit the linear mixed model to the data, incorporating a Linear correlation structure and assess the autocorrelation structure of the residuals.
 
-```{r Linear}
+```{r }
 mod5_lin <- lme(respiration ~ treatment*fdar,
                 random = ~1 |rep/plot,
                 correlation = corLin(form = ~dar),
@@ -300,10 +319,15 @@ mod5_lin
 ACF(mod5_lin, resType = "n") %>%
   plot(alpha = 0.01)
 ```
+```{r}
+anova(mix_mod,mod2_ma,mod3_exp, mod4_gaus,mod5_lin)
+```
 
-Here, I will fit the linear mixed model to the data, incorporating an Rational Quadratic correlation structure and assessses the autocorrelation structure of the residuals.
+# Rational quadratic
 
-```{r - Rational Quadratic }
+We will fit the linear mixed model to the data, incorporating a Rational Quadratic correlation structure and assess the autocorrelation structure of the residuals.
+
+```{r }
 mod6_rq <- lme(respiration ~ treatment*fdar,
                 random = ~1 |rep/plot,
                 correlation = corRatio(form = ~dar),
@@ -315,10 +339,14 @@ mod6_rq
 ACF(mod6_rq, resType = "n") %>%
   plot(alpha = 0.01)
 ```
+```{r}
+anova(mix_mod,mod2_ma,mod3_exp, mod4_gaus,mod5_lin,mod6_rq)
+```
 
-Here, I will fit the linear mixed model to the data, incorporating an Spherical correlation structure and assessses the autocorrelation structure of the residuals.
+# Spherical 
+We will fit the linear mixed model to the data, incorporating a Spherical correlation structure and assess the autocorrelation structure of the residuals.
 
-```{r - Spherical}
+```{r}
 mod7_sph <- lme(respiration ~ treatment*fdar,
                 random = ~1 |rep/plot,
                 correlation = corSpher(form = ~dar),
@@ -331,9 +359,10 @@ ACF(mod7_sph, resType = "n") %>%
   plot(alpha = 0.01)
 ```
 
+# Final comparison
 Here, we will run a ANOVA based on different model, allowing for the comparison of the models based on their AIC values.
 
-```{r - Final comparison}
+```{r}
 anova(mix_mod, mod2_ma, mod3_exp, mod4_gaus, mod5_lin, mod6_rq, mod7_sph) %>%
   as.data.frame() %>%
   rownames_to_column(var = "modelname") %>%
@@ -341,11 +370,10 @@ anova(mix_mod, mod2_ma, mod3_exp, mod4_gaus, mod5_lin, mod6_rq, mod7_sph) %>%
   dplyr::select(modelname, model, df, aic, bic) %>%
   arrange(aic)
 ```
+From the above table, we were able to say that Auturegressive Moving Average (ARMA) performed the best, since it had the lowest AIC values. We will base our analysis on the same. 
 
-
-Best model - mod2 ma
-
-Here, we will extract the model residuals and calculate standardized residuals and keep in tidy format. \# checking residuals
+# Residual extraction
+Here, we will extract the model residuals and calculate standardized residuals and keep in tidy format. 
 
 ```{r}
 library(broom.mixed)
@@ -357,9 +385,10 @@ mod2_ma_resid <- augment(mod2_ma) %>%
 mod2_ma_resid
 ```
 
+# Block random effect
 Here, random effects from the linear mixed model (mod2_ma) will be extracted and visualized using Quantitle-quantile(QQ) plot to assess the normality of the random effect.
 
-```{r - block random effects}
+```{r}
 ranef(mod2_ma)[[1]] %>% 
    ggplot(aes(sample=`(Intercept)`))+
   stat_qq(  shape = 21,
@@ -375,6 +404,7 @@ ranef(mod2_ma)[[1]] %>%
 ```
 
 The points seem a little off, but nothing too worrying. 
+
 # blocks:plots random effects
 
 ```{r}
@@ -408,7 +438,9 @@ ggplot(mod2_ma_resid, aes(x=.fitted, y=.stdresid))+
   theme_bw()
   
 ```
+We do see that thre are two residual outliers, but upon further examination of our raw data we decided to leave the outliers as is. The raw data points did not seem too much out of the ordinary, and hence we had to make a personal choice of retaining the outlier, even though it might skew our analysis a bit. 
 
+# Normality assumption of residuals
 Here, we will run QQ plot to visualize whether the standardized residuals follow normal distribution. 
 
 ```{r}
@@ -423,16 +455,19 @@ ggplot(mod2_ma_resid, aes(sample=.stdresid))+
        y = "Sample quantile")+
   theme_bw()
 ```
+Although the tails are a bit off, it does not seem to be a problem. 
 
 Here, we will run type III ANOVA table for the fixed effects in mod2_ma and observe the significant factor.
 
 ```{r}
 Anova(mod2_ma, type = 3)
 ```
+We see a significant interaction effects, and hence we go ahead with the comparison of means of all treatments crossed with the days after rain. 
 
+# treatment x fdar Interaction
 Here, we compare means between different treatments within each day of measurement. 
 
-```{r treatment x fdar Interaction}
+```{r}
 rm_rcbd_cld_tfdar <- emmeans(mod2_ma, ~ treatment|fdar) %>%
   cld(reversed = T,
       Letters = letters,
@@ -443,6 +478,7 @@ rm_rcbd_cld_tfdar <- emmeans(mod2_ma, ~ treatment|fdar) %>%
   rm_rcbd_cld_tfdar
 ```
 
+# Final plot 1 (treatment in dar)
 In this chunk, we will see the effects of different treatments on each of the different days. Different letters signify difference. 
 
 ```{r}
@@ -477,9 +513,9 @@ ggplot(mapping = aes(fill = treatment))+
   
 ```
 
-Overall, on all days soil efflux values from NPK = disturbance plots were higher than the other treatment plots, especially on day 1 and day 10 after rain, where we see a statistically significant difference between the combined treatment and the other treatments. It is also interesting to note the variability in efflux values in NPK plots. 
+Overall, on all days soil efflux values from NPK + disturbance plots were higher than the other treatment plots, especially on day 1 and day 10 after rain, where we see a statistically significant difference between the combined treatment and the other treatments. It is also interesting to note the variability in efflux values in NPK plots. 
 
-In the chunk below, we compare different days after rain within each treatment plots. 
+In the chunk below, we compare means of different days after rain within each treatment plots. 
 
 ```{r}
 rm_rcbd_cld_dartf <- emmeans(mod2_ma, ~ fdar|treatment) %>%
@@ -492,6 +528,7 @@ rm_rcbd_cld_dartf
 
 ```
 
+# Final plot 2 (dar in treatment)
 In this chunk, we see how soil respiration varies across different levels of the drying cycle("fdar") highlighting significant difference between levels within treatment groups will be visualized using boxplot.
 
 ```{r}
@@ -524,6 +561,11 @@ ggplot(mapping = aes(fill = fdar))+
 ```
 
 From the above graph, we can say that soil respiration spikes a day after rain in plots treated with NPK + disturbance. This confirms our hypothesis that soils with combined treatments of NPK + disturbance will have a higher CO2 efflux following a rain event. 
+
+## Conclusion 
+We hypothesize that, soil respiration increases in fertilized and tilled plots. Additionally, we believe that plots under these treatments will have a higher respiration following precipation as compared to the control plots. 
+We hypothesized that we would see an increase CO2 efflux, which does seem to be the case as seen in the above graphs. The plots treated with both fertilization and tillage are higher on all days, with statistical difference on two of the days (day 1 and day 10). Plots treated with just NPK have a huge variation in their values but they do not seem to have any significant differences from the control. The same goes with plots with just disturbance as a treatment. 
+Our hypothesis that precipitation can be a factor to increased fluxes is true in the plots treated with NPK + disturbance, as we can see the day right after a rain even (day 1), we saw a statistically significant increase in CO2 fluxes. But these effects were not found on other treatments. So, we could say that the interaction of NPK + disturbance and precipitation has an effect on the respiration values. 
 
 # Team work in GitHub
 
@@ -561,4 +603,7 @@ For ex., `Bastos-Mendes_midtermproject.html`.
 Send the html file to my email (lmbastos\@uga.edu) by **April 11th** 11:59 pm.
 
 # References 
-
+1.Bond-Lamberty, B. and Thomson, A. (2010). Temperature-associated increases in the global soil
+respiration record. Nature, 464(7288):579–582
+2. 
+2. Pinheiro J, Bates D, R Core Team (2023). nlme: Linear and Nonlinear Mixed Effects Models. R package version 3.1-164, https://CRAN.R-project.org/package=nlme.
