@@ -63,8 +63,7 @@ We ran the ANCOVA model, and checked for one of the assumptions, which were not 
 ## Loading Packages
 In this chunk, packages will be loaded that will be used in the process of the analysis.
 
-```{r }
-knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```{r, warning=FALSE, message=FALSE}
 #|message: False
 #|warning: False
 library(tidyverse)
