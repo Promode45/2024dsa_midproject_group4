@@ -1,6 +1,6 @@
 ---
-title: "Mid-term project instructions"
-author: "FULL NAME STUDENT 1 & FULL NAME STUDENT 2"
+title: "Mid-term project"
+author: "Pramod Hegde & Sandesh Shresta"
 format:
   html:
     code-fold: false
@@ -13,35 +13,20 @@ format:
 # Mid-term project GitHub repository URL:
 
 Paste here the URL of the GitHub project (after going through the instruction steps)
+https://github.com/Promode45/midproject_group4
 
-# Instructions
-
-This file contains both the **instructions** for the mid-term project and placeholders for your code. You are required to use this file to produce code, output, and answers to the questions below.
-
-Besides simply creating output, make sure to interpret the output. You will need to create tables and/or plots to arrive at the answers, and then comment on what you found below it.
-
-To get you setup, you will need to:
-
--   Student #1: create a repository on your GitHub account. You can call this repository "2024dsa_midproject_groupX", **where X is the number of your group**. Make it public, add a README, add a .gitignore for R.\
--   Student #1: follow the steps we did in class to start a new RStudio project with version control.\
--   Student #1: in your computer, create the sub-folders code, data, output, and move your data set into the `data` folder. Also, student 1 moves this current script into the `code` folder. Do a git stage, commit, push.\
--   Student #1: on GitHub, go the repository settings and invite your partner to be a collaborator in the repository. That will give them push permission.\
--   Now, both students should clone this repository on their computers like we did in class. Make sure this step works well and that you can pull and push from GitHub.\
--   Student 2, after cloning, does a git pull to get all these updates on their computer.\
--   Student 1 and 2 work together to update the README file. README files should explain what the repository is about, the goals of that project, who is working in it, and any other important details you may find.
 
 # Introduction
 
 Gross Primary Production(GPP) and soil respiration make the highest carbon fluxes from the terrestrial ecosystem to the atmosphere (Bond-Lamberty and Thomson, 2010). Due to the magnitude of the CO2 flux from soils to atmosphere and the huge reserve of potential C in soils, any increases in soil respiration due to man-made or environmental changes may increase atmospheric CO2 levels and exacerbate global warming. Soil respiration consists mainly of respiration from roots, mycorrhizal fungi and microbes. Microbial respiration of soil C is the highest of the three (Wang and Fang, 2009). 
 
-Human activities have been significantly modifying biogeochemical cycles in many ways. Management practices like tillage and fertilization are one of the key factors contributing to increasing CO2 efflux from soils. Nitrogen is the most important component for plant growth, is often limiting in ecosystems, and could affect soil respiration by altering microbial biomass, their activity and root growth (Ding et al.,2010). Studies have found a sharp increase in CO2 efflux following tillage, mainly due to broken soil clods and aggregates which act as "gas tankers" (Fielder et al., 2015; Morell et al., 2010). Although, sharp increases of CO2 efflux are seen following tillage, the extent of the increase depends on cultivation type, Soil Organic Carbon (SOC), soil texture and structure. 
+Human activities have been significantly modifying biogeochemical cycles in many ways. Management practices like tillage and fertilization are one of the key factors contributing to increasing CO2 efflux from soils. Nitrogen is the most important component for plant growth, is often limiting in ecosystems, and could affect soil respiration by altering microbial biomass, their activity and root growth (Ding et al.,2010). Studies have found a sharp increase in CO2 efflux following tillage, mainly due to broken soil clods and aggregates which act as "gas tankers" (Fielder et al., 2015; Morell et al., 2012). Although, sharp increases of CO2 efflux are seen following tillage, the extent of the increase depends on cultivation type, Soil Organic Carbon (SOC), soil texture and structure. 
 
-Soil temperature and soil water content are considered the main environmental controls of soil respiration, as these can affect both microbial and root growth. The indirect effects of these factors, nutrient availability and plant productivity can also affect CO2 efflux from soils. Rainfall events can result in changes in both soil temperature and water content, and has been part of numerous studies (Shi et al., 2011; Muhr et al., 2010; Morell et al., 2010). But there are very few studies, where the combined effects of management practices, soil temperature and soil moisture have been studied. 
+Soil temperature and soil water content are considered the main environmental controls of soil respiration, as these can affect both microbial and root growth. The indirect effects of these factors, nutrient availability and plant productivity can also affect CO2 efflux from soils. Rainfall events can result in changes in both soil temperature and water content, and has been part of numerous studies (Shi et al., 2011; Muhr and Borken, 2009; Morell et al., 2012). But there are very few studies, where the combined effects of management practices, soil temperature and soil moisture have been studied. 
 
 In this experiment, we try to see the effects of common land management practices on soil respiration across different days following precipitation. 
-# Hypothesis and objectives
 
-Describe here your hypothesis, followed by your objectives. Make sure your hypothesis are testable and bold, and objectives are clear.
+# Hypothesis and objectives
 
 We hypothesize that, soil respiration increases with fertilization and tillage. Additionally, we believe that plots under these treatments will have a higher respiration following precipation as compared to the control plots. 
 
@@ -49,28 +34,24 @@ The objectives of this study are (a) to assess the effects of treatments fertili
 
 # Material and Methods
 
-Describe here your overall material and methods as it pertains to the analysis you will conduct, including study description, site/setup description, what equipment was used, etc. just like you would in a paper. Make sure to clearly explain what was measured and how.
-
 ## Site description
 
 The study was conducted at the Whitehall forest in the Piedmont regions Clarke and Ocoonee county in Athens, Georgia, USA. The area has a humid subtropical climate with a mean annual precipitation of 1267.3 mm, and average January and July temperatures of 6.3 degree C and 26.3 degree C respectively. Average elevation is approximately 200m above mean sea level. 
 
 ## In-situ field measurements
-The gas samples were taken in late January and early February following two precipitation events from 25 treatment plots. Each plot is fitted with Polyvinyl chloride collars at a depth of about 5cm which are used to collect gas samples. We used a Licor LI-870 gas analyzer (LI-COR Inc., Lincoln, NE, USA) to measure the CO2 flux. The device is also equipped with a probe that simultaneously measures soil moisture, soil temperature and Electrical Conductivity. The measurements were taken on six different days to see the effects of rain on soil respiration. 
+
+The gas samples were taken in late January and early February following two precipitation events from 25 treatment plots. Each plot is fitted with Polyvinyl chloride collars at a depth of about 5cm which are used to collect gas samples. We used a Licor LI-870 gas analyzer (LI-COR Inc., Lincoln, NE, USA) to measure the CO2 flux. The device is also equipped with a probe that simultaneously measures soil moisture, soil temperature and Electrical Conductivity(EC). The measurements were taken on six different days to see the effects of rain on soil respiration. 
 The study area experienced rainfall on 28th of January 2024, and we started our soil respiration measurements from the 29th of January 2024 on days 1, 2, 3, 8,9 and 10. The repeated measure in this experiment "days after rain" are these measurements that were taken between the 29th of January 2024 and 10th of February 2024. It is worth mentioning that, there was a slight precipitation on day 7, but we did not consider this rain event as significantly affecting the experiment. 
 
 ## Study design
-
-Clearly describe your study design here, including treatment design (which factors and levels, the hierarchy among them, etc.), and your experimental design (number of reps/blocks, how was randomization performed, etc.), as we talked about in class.  
 
 The study consists of a set of five completely randomized blocks (within-site spatial replicates), each with five, 5x5m plots receiving either long-term nutrient addition, a physical disturbance, nutrient addition combined with disturbance, short-term nutrient addition or no treatments. The treatments were done just once at the beginning of summer every year (mid June). The randomization of the study site was carried out using a R code given on the project website (https://nutnet.org/sites/default/files/2019-07/create-site-maps-dragnet-03-July-2019.R).
 
 
 ## Statistical analysis
-
-Describe here your statistical analysis, including what type of ANOVA model you ran (based on the design above), what was your response variable, what were your explanatory variables and how were the explanatory variables treated (random or fixed). Provide your alpha level. Explain which function from which package you used to analyze this data. Explain how you checked linear model assumptions and whether or not they were met. Overall, make sure you explain in sufficient detail that, if given your data, a knowledgeable person would be able to reproduce your analysis exactly.  
   
-Soil respiration for different treatments were analyzed using a repeated measured mixed-effect ANOVA. Model explanatory variables included treatment (as categorical variable), days after rain (repeated measure) and their interaction as fixed effects. Plot which was nested inside blocks was modeled as the random effect. Different error correlation structures like ARMA(1), exponential, Gaussian at the plot level over all DARs, and the one with the lowest Akaike Information Criterion (AIC) was selected for further analysis. The repeated measures were of unequal time intervals, and hence the choice of correlation structures were limited. Soil moisture and temperature were also measured, since these two factors are known to have an effect on how microbes respire carbon dioxide. The two factors were considered as covariates, and hence accordingly an ANCOVA was also conducted. The assumptions of ANCOVA are as follows - 
+Soil respiration for different treatments were analyzed using a repeated measured mixed-effect ANOVA. Model explanatory variables included treatment (as categorical variable), days after rain (repeated measure) and their interaction as fixed effects. Plot which was nested inside blocks was modeled as the random effect. Different error correlation structures like ARMA(1), exponential, Gaussian,linear etc were applied and the one with the lowest Akaike Information Criterion (AIC) was selected for further analysis. The repeated measures were of unequal time intervals, and hence the choice of correlation structures were limited. Soil moisture and temperature were also measured, since these two factors are known to have an effect on how microbes respire carbon dioxide. The two factors were considered as covariates, and hence accordingly an ANCOVA was also conducted. The assumptions of ANCOVA are as follows - 
+
 1. Linear relationships - the effect of the categorical variable on the outcome varies linearly with the outcome.  
 2. Homogeneity of slopes - The relationship between the dependent and independent variable should be consistent across all the treatment levels. Slopes of regression lines (representing the effect of covariates) should be parallel for each group.  
 3. Uncorrelated covariates - The covariates must not be correlated to the error term.  
@@ -79,20 +60,11 @@ We ran the ANCOVA model, and checked for one of the assumptions, which were not 
 
 # Results
 
-Here is where the coding is going to happen, and it will be completely up to you. Include under this section as many sub-sections (using ##) and as many chunks needed to create the analytical workflow for your analysis, starting at loading packages and data, wrangling, EDA, modeling, assumptions checking, ANOVA table, means, pairwise comparisons, and final publication-quality plot.
-
-Make sure to run a model that reflects your study design. Even if your study design does not include one of the designs covered in class, you are still expected to run the most appropriate model. If you need help for references, let me know.
-
-Before each chunk, describe the steps being performed in that chunk. For example, "Here I will load the data".
-
-If a chunk produces output, like printing a data frame, statistical summary, a plot, ANOVA table, etc., make sure to write text interpreting what you see and how you can/will use that information to move forward to the next steps in the workflow.
-
-## Running Code
-
 # Loading Packages
-In this chunk, I will load all the packages that will be used in the process of the analysis.
+In this chunk, packages will be loaded that will be used in the process of the analysis.
 
 ```{r }
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 #|message: False
 #|warning: False
 library(tidyverse)
@@ -157,14 +129,17 @@ data_w <- data[-26,] %>%
 
 summary(data_w)
 ```
-In the data, swc stands for Soil Water Content, st stands for Soil temperature, 1-6 being the different days of measurement, dar being Days After Rain, date is the date of measurement. 
+Some references for the data, swc stands for Soil Water Content, st stands for Soil temperature, 1-6 being the different days of measurement, dar being Days After Rain, date is the date of measurement. 
 
-# EDA
+# EDA - Exploratory Data Analysis
 
 ```{r}
 data_w %>% 
   group_by(fdar) %>% 
-  ggplot(aes(treatment,respiration))+
+  ggplot(aes(treatment,respiration, 
+             color = treatment
+             ))+
+  theme(legend.position = "none")+
   geom_boxplot()
 ```
 From the above graph, we can make an initial analysis saying that the plots with NPK treatments have in general a higher respiration value, especially the combined effects of NPK and disturbance,
@@ -172,11 +147,15 @@ From the above graph, we can make an initial analysis saying that the plots with
 ```{r}
 data_w %>% 
   group_by(treatment) %>% 
-  ggplot(aes(fdar, respiration))+
-  geom_boxplot()
+  ggplot(aes(fdar, respiration,
+             color = fdar))+
+  labs(x = "Days After Rain (DAR)")+
+  geom_boxplot()+
+  theme_classic()+
+  theme(legend.position = "none")+
+  scale_color_viridis_d()
 ```
 Although not too different, we could still say that respiration values the day right after a rain were higher than the other days. This is also part of our hypothesis. 
-
 
 Here, we will inspect the distribution of respiration across different level of days after rain (dar), segmented by treatment, which can provide insights into potential relationships and patterns in the data.
 
@@ -580,21 +559,6 @@ If you are working in duos, make sure to split the workload. I will check your c
 
 Once you have developed all the code and answers, make sure to Render this quarto file.
 
-**Notes on rendering**:
-
--   Make sure to render your work and inspect how the final html look like.\
--   If it does not look professional for whatever reason, then fix the issue, re-render it, recheck.\
--   Only send me your work once your html file looks professional.\
--   Some potential issues you may encounter and how to fix them:
-    -   Some times your code may be creating a table output that is waaay to long and cumbersome to scroll through when rendered. If this is the case, make it more professional looking by using the `head()` function to only print the first handful of rows (instead of thousands of rows).
-
-    -   **DO NOT** delete the file's heading levels (# and ##). They set up the proper heading 1 and 2 levels, and I use them to guide my grading.
-
-    -   If a given chunk is also outputting warnings or messages, inhibit this behavior by changing the chunk options `message` and `warning` to `FALSE`.
-
-    -   If, after rendered, 2 lines of text are connected and you wish to "break line" between them, add 2 extra spaces after the first one.
-
-After rendering, an .html file will be created on your `code` folder.
 
 Rename this file to `LASTNAME1-LASTNAME2_midtermproject.html`.\
 For ex., `Bastos-Mendes_midtermproject.html`.
@@ -603,6 +567,12 @@ Send the html file to my email (lmbastos\@uga.edu) by **April 11th** 11:59 pm.
 
 # References 
 1.Bond-Lamberty, B. and Thomson, A. (2010). Temperature-associated increases in the global soil
-respiration record. Nature, 464(7288):579–582
-2. 
-2. Pinheiro J, Bates D, R Core Team (2023). nlme: Linear and Nonlinear Mixed Effects Models. R package version 3.1-164, https://CRAN.R-project.org/package=nlme.
+respiration record. Nature, 464(7288):579–582.
+2. Ding, W., Yu, H., Cai, Z., Han, F., & Xu, Z. (2010). Responses of soil respiration to N fertilization in a loamy soil under maize cultivation. Geoderma, 155(3-4), 381-389.
+3.Fiedler, S. R., Buczko, U., Jurasinski, G., & Glatzel, S. (2015). Soil respiration after tillage under different fertiliser treatments–implications for modelling and balancing. Soil and Tillage Research, 150, 30-42.
+4.Morell, F. J., Whitmore, A. P., Álvaro-Fuentes, J., Lampurlanés, J., & Cantero-Martínez, C. (2012). Root respiration of barley in a semiarid Mediterranean agroecosystem: field and modelling approaches. Plant and soil, 351, 135-147.
+5.Muhr, J., & Borken, W. (2009). Delayed recovery of soil respiration after wetting of dry soil further reduces C losses from a Norway spruce forest soil. Journal of Geophysical Research: Biogeosciences , 114 (G4).
+6. Leppink, J. (2018). Analysis of Covariance (ANCOVA) vs. Moderated Regression (MODREG): Why the Interaction Matters. Health Professions Education, 4(3), 225–232. https://doi.org/10.1016/j.hpe.2018.04.001.
+7.Pinheiro J, Bates D, R Core Team (2023). nlme: Linear and Nonlinear Mixed Effects Models. R package version 3.1-164, https://CRAN.R-project.org/package=nlme.
+8.Shi, W. Y., Tateno, R., Zhang, J. G., Wang, Y. L., Yamanaka, N., & Du, S. (2011). Response of soil respiration to precipitation during the dry season in two typical forest stands in the forest–grassland transition zone of the Loess Plateau. Agricultural and forest meteorology, 151(7), 854-863.
+9.Wang, W., & Fang, J. (2009). Soil respiration and human effects on global grasslands. Global and Planetary Change , 67 (1-2), 20-28.
