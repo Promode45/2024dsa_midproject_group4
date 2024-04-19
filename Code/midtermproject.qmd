@@ -60,7 +60,7 @@ We ran the ANCOVA model, and checked for one of the assumptions, which were not 
 
 # Results
 
-# Loading Packages
+## Loading Packages
 In this chunk, packages will be loaded that will be used in the process of the analysis.
 
 ```{r }
@@ -79,7 +79,7 @@ library(emmeans)
 library(multcomp)
 ```
 
-# importing data
+## importing data
 We will import data in the following chunk
 
 ```{r }
@@ -88,7 +88,7 @@ data <- read.csv("../Data/soilresp_midterm.csv")
 summary(data)
 ```
 
-# Data wrangling
+## Data wrangling
 In this chunk, we will manipulate and prepare the data for further analysis, including cleaning column header name, creating a column for rep(block), converting variables to appropriate data types and reshaping the data into a more suitable format for analysis.
 
 ```{r }
@@ -131,7 +131,7 @@ summary(data_w)
 ```
 Some references for the data, swc stands for Soil Water Content, st stands for Soil temperature, 1-6 being the different days of measurement, dar being Days After Rain, date is the date of measurement. 
 
-# EDA - Exploratory Data Analysis
+## EDA - Exploratory Data Analysis
 
 ```{r}
 data_w %>% 
@@ -166,7 +166,7 @@ data_w %>%
  facet_wrap(~treatment)
   
 ```
-# Ancova
+## Ancova
 One of the assumptions of the ancova model is that the dependent variable must be linearly related to the covariates (Leppink, 2010)
 
 In the chunk below, we will reshape data and visualize the data to check the linearity of the covariates.
@@ -191,7 +191,7 @@ data_w %>%
 
 The linearity assumption seems to be not satisfied, and thus we move ahead with just the anova analysis.
 
-#  default model
+###  default model
 Here, we will setup the environment for model fitting and fit the default linear mixed-effects model.
 
 ```{r}
@@ -216,7 +216,7 @@ ACF(mix_mod, resType = "n") %>%
 ```
 Although the default model will not be considered for model comparison, it is an easy way to start, and get a handle of things. There are six lags in the ACF plot above, which agrees with the number of repeated measures. But, it does seem that lag 1 is beyond our threshold requirement. 
 
-#  autroregressive moving average(ARMA)
+###  autroregressive moving average(ARMA)
 In this chunk I will fit linear mixed-effects model with an autoregreessive moving average (ARMA) correlation structure to the data and assesses the autocorrelation structure of the residuals.
 
 ```{r}
@@ -239,7 +239,7 @@ anova(mix_mod,mod2_ma)
 The AIC value for model 2 is lower than the default, which is a positive thing. But, BIC values do not represent the same. But, we will move on, and try to apply different correlation structures to see their effectiveness. 
 
 
-#  exponential correlation structure
+###  exponential correlation structure
 In this chunk, I will fit the linear mixed model to the data, incorporating an exponential correlation structure to account for the correlation between observations based on the different level of days after rain.
 
 ```{r}
@@ -260,7 +260,7 @@ anova(mix_mod,mod2_ma,mod3_exp)
 ```
 As expected from the ACF curve, we do see that the exponential correlation structure did not perform well (higher AIC)
 
-# Gaussian 
+### Gaussian 
 Here, we will fit the linear mixed model to the data, incorporating a Gaussian correlation structure and assess the autocorrelation structure of the residuals.
 
 ```{r }
@@ -281,7 +281,7 @@ anova(mix_mod,mod2_ma,mod3_exp, mod4_gaus)
 ```
 Still model 2 with ARMA is the best performing. 
 
-# Linear
+### Linear
 Here, we will fit the linear mixed model to the data, incorporating a Linear correlation structure and assess the autocorrelation structure of the residuals.
 
 ```{r }
@@ -302,7 +302,7 @@ ACF(mod5_lin, resType = "n") %>%
 anova(mix_mod,mod2_ma,mod3_exp, mod4_gaus,mod5_lin)
 ```
 
-# Rational quadratic
+### Rational quadratic
 
 We will fit the linear mixed model to the data, incorporating a Rational Quadratic correlation structure and assess the autocorrelation structure of the residuals.
 
@@ -322,7 +322,7 @@ ACF(mod6_rq, resType = "n") %>%
 anova(mix_mod,mod2_ma,mod3_exp, mod4_gaus,mod5_lin,mod6_rq)
 ```
 
-# Spherical 
+### Spherical 
 We will fit the linear mixed model to the data, incorporating a Spherical correlation structure and assess the autocorrelation structure of the residuals.
 
 ```{r}
@@ -338,7 +338,7 @@ ACF(mod7_sph, resType = "n") %>%
   plot(alpha = 0.01)
 ```
 
-# Final comparison
+## Final comparison
 Here, we will run a ANOVA based on different model, allowing for the comparison of the models based on their AIC values.
 
 ```{r}
@@ -351,7 +351,7 @@ anova(mix_mod, mod2_ma, mod3_exp, mod4_gaus, mod5_lin, mod6_rq, mod7_sph) %>%
 ```
 From the above table, we were able to say that Auturegressive Moving Average (ARMA) performed the best, since it had the lowest AIC values. We will base our analysis on the same. 
 
-# Residual extraction
+## Residual extraction
 Here, we will extract the model residuals and calculate standardized residuals and keep in tidy format. 
 
 ```{r}
@@ -364,7 +364,7 @@ mod2_ma_resid <- augment(mod2_ma) %>%
 mod2_ma_resid
 ```
 
-# Block random effect
+## Block random effect
 Here, random effects from the linear mixed model (mod2_ma) will be extracted and visualized using Quantitle-quantile(QQ) plot to assess the normality of the random effect.
 
 ```{r}
@@ -384,7 +384,7 @@ ranef(mod2_ma)[[1]] %>%
 
 The points seem a little off, but nothing too worrying. 
 
-# blocks:plots random effects
+## blocks:plots random effects
 
 ```{r}
 ranef(mod2_ma)[[2]] %>% 
@@ -402,7 +402,7 @@ ranef(mod2_ma)[[2]] %>%
 
 The tails are a little off, but this is to be expected in limited number of data points. 
 
-# within groups errors
+## within groups errors
 Here we will run a diagnostic plot to assess the goodness-of-fit of the linear mixed effects model, examining the standardized residuals against fitted values to identify potential outliers and assess the trend in the residuals. 
 
 ```{r}
@@ -419,7 +419,7 @@ ggplot(mod2_ma_resid, aes(x=.fitted, y=.stdresid))+
 ```
 We do see that thre are two residual outliers, but upon further examination of our raw data we decided to leave the outliers as is. The raw data points did not seem too much out of the ordinary, and hence we had to make a personal choice of retaining the outlier, even though it might skew our analysis a bit. 
 
-# Normality assumption of residuals
+## Normality assumption of residuals
 Here, we will run QQ plot to visualize whether the standardized residuals follow normal distribution. 
 
 ```{r}
@@ -443,7 +443,7 @@ Anova(mod2_ma, type = 3)
 ```
 We see a significant interaction effects, and hence we go ahead with the comparison of means of all treatments crossed with the days after rain. 
 
-# treatment x fdar Interaction
+## treatment x fdar Interaction
 Here, we compare means between different treatments within each day of measurement. 
 
 ```{r}
@@ -454,10 +454,10 @@ rm_rcbd_cld_tfdar <- emmeans(mod2_ma, ~ treatment|fdar) %>%
   as.data.frame() %>%
   mutate(letter = trimws(.group))
   
-  rm_rcbd_cld_tfdar
+  head(rm_rcbd_cld_tfdar)
 ```
 
-# Final plot 1 (treatment in dar)
+## Final plot 1 (treatment in dar)
 In this chunk, we will see the effects of different treatments on each of the different days. Different letters signify difference. 
 
 ```{r}
@@ -503,11 +503,11 @@ rm_rcbd_cld_dartf <- emmeans(mod2_ma, ~ fdar|treatment) %>%
       adjust = "none") %>%
   as.data.frame() %>%
   mutate(letter = trimws(.group))
-rm_rcbd_cld_dartf
+head(rm_rcbd_cld_dartf)
 
 ```
 
-# Final plot 2 (dar in treatment)
+## Final plot 2 (dar in treatment)
 In this chunk, we see how soil respiration varies across different levels of the drying cycle("fdar") highlighting significant difference between levels within treatment groups will be visualized using boxplot.
 
 ```{r}
@@ -547,18 +547,9 @@ Our hypothesis that precipitation can be a factor to increased fluxes is true in
 
 # Team work in GitHub
 
-Whether you are working with your future-self or as duos, make sure to stage, commit, and push after finishing each of the sub-sections above. When committing, write commit messages that are short and descriptive (e.g., finished wrangling).
-
-If you are working in duos, make sure to split the workload. I will check your collaborative work through the commit history, and if one student has contributed significantly more than the other, than that will impact grades.
-
-**Tip 1**: to avoid merge conflicts, make sure to **pull** first, and then start working locally. That will ensure that any changes made by your partner will be "downloaded" before you make changes to the files locally.
-
-**Tip 2**: make use of the Issues on this repository to set up to-do lists and assign tasks to different people. You can also use each issue/task to discuss how things should be run and get to an agreement.
-
 # Submitting your work
 
 Once you have developed all the code and answers, make sure to Render this quarto file.
-
 
 Rename this file to `LASTNAME1-LASTNAME2_midtermproject.html`.\
 For ex., `Bastos-Mendes_midtermproject.html`.
@@ -568,11 +559,19 @@ Send the html file to my email (lmbastos\@uga.edu) by **April 11th** 11:59 pm.
 # References 
 1.Bond-Lamberty, B. and Thomson, A. (2010). Temperature-associated increases in the global soil
 respiration record. Nature, 464(7288):579–582.
-2. Ding, W., Yu, H., Cai, Z., Han, F., & Xu, Z. (2010). Responses of soil respiration to N fertilization in a loamy soil under maize cultivation. Geoderma, 155(3-4), 381-389.
+
+2.Ding, W., Yu, H., Cai, Z., Han, F., & Xu, Z. (2010). Responses of soil respiration to N fertilization in a loamy soil under maize cultivation. Geoderma, 155(3-4), 381-389.
+
 3.Fiedler, S. R., Buczko, U., Jurasinski, G., & Glatzel, S. (2015). Soil respiration after tillage under different fertiliser treatments–implications for modelling and balancing. Soil and Tillage Research, 150, 30-42.
+
 4.Morell, F. J., Whitmore, A. P., Álvaro-Fuentes, J., Lampurlanés, J., & Cantero-Martínez, C. (2012). Root respiration of barley in a semiarid Mediterranean agroecosystem: field and modelling approaches. Plant and soil, 351, 135-147.
+
 5.Muhr, J., & Borken, W. (2009). Delayed recovery of soil respiration after wetting of dry soil further reduces C losses from a Norway spruce forest soil. Journal of Geophysical Research: Biogeosciences , 114 (G4).
-6. Leppink, J. (2018). Analysis of Covariance (ANCOVA) vs. Moderated Regression (MODREG): Why the Interaction Matters. Health Professions Education, 4(3), 225–232. https://doi.org/10.1016/j.hpe.2018.04.001.
+
+6.Leppink, J. (2018). Analysis of Covariance (ANCOVA) vs. Moderated Regression (MODREG): Why the Interaction Matters. Health Professions Education, 4(3), 225–232. https://doi.org/10.1016/j.hpe.2018.04.001.
+
 7.Pinheiro J, Bates D, R Core Team (2023). nlme: Linear and Nonlinear Mixed Effects Models. R package version 3.1-164, https://CRAN.R-project.org/package=nlme.
+
 8.Shi, W. Y., Tateno, R., Zhang, J. G., Wang, Y. L., Yamanaka, N., & Du, S. (2011). Response of soil respiration to precipitation during the dry season in two typical forest stands in the forest–grassland transition zone of the Loess Plateau. Agricultural and forest meteorology, 151(7), 854-863.
+
 9.Wang, W., & Fang, J. (2009). Soil respiration and human effects on global grasslands. Global and Planetary Change , 67 (1-2), 20-28.
