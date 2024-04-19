@@ -563,7 +563,6 @@ ggplot(mapping = aes(fill = fdar))+
 From the above graph, we can say that soil respiration spikes a day after rain in plots treated with NPK + disturbance. This confirms our hypothesis that soils with combined treatments of NPK + disturbance will have a higher CO2 efflux following a rain event. 
 
 ## Conclusion 
-We hypothesize that, soil respiration increases in fertilized and tilled plots. Additionally, we believe that plots under these treatments will have a higher respiration following precipation as compared to the control plots. 
 We hypothesized that we would see an increase CO2 efflux, which does seem to be the case as seen in the above graphs. The plots treated with both fertilization and tillage are higher on all days, with statistical difference on two of the days (day 1 and day 10). Plots treated with just NPK have a huge variation in their values but they do not seem to have any significant differences from the control. The same goes with plots with just disturbance as a treatment. 
 Our hypothesis that precipitation can be a factor to increased fluxes is true in the plots treated with NPK + disturbance, as we can see the day right after a rain even (day 1), we saw a statistically significant increase in CO2 fluxes. But these effects were not found on other treatments. So, we could say that the interaction of NPK + disturbance and precipitation has an effect on the respiration values. 
 
